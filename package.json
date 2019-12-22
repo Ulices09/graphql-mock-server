@@ -1,0 +1,19 @@
+{
+  "name": "petsql",
+  "version": "1.0.0",
+  "description": "GrapthQL server with apollo",
+  "main": "index.js",
+  "author": "Ulices Meléndez Acosta",
+  "license": "MIT",
+  "scripts": {
+    "tsc": "tsc",
+    "dev": "ts-node-dev --respawn --transpileOnly ./src/index.ts",
+    "prod": "tsc && node ./build/index.js"
+  },
+  "dependencies": {
+    "apollo-server": "^2.9.14",
+    "graphql": "^14.5.8",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.7.4"
+  }
+}
