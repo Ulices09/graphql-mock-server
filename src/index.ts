@@ -1,42 +1,48 @@
 import { ApolloServer, gql } from 'apollo-server';
+import { PetService } from './services/pet.service';
+
+type PetsByTypeArgs = {
+    type: string;
+};
 
 const typeDefs = gql`
-    # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-    # This "Book" type defines the queryable fields for every book in our data source.
-    type Book {
-        title: String
-        author: String
+    type Pet {
+        name: String
+        type: String
     }
 
-    # The "Query" type is special: it lists all of the available queries that
-    # clients can execute, along with the return type for each. In this
-    # case, the "books" query returns an array of zero or more Books (defined above).
     type Query {
-        books: [Book]
+        pets: [Pet]
+        petsByType(type: String): [Pet]
     }
 `;
 
-const books = [
-    {
-        title: 'Harry Potter and the Chamber of Secrets',
-        author: 'J.K. Rowling',
-    },
-    {
-        title: 'Jurassic Park',
-        author: 'Michael Crichton',
-    },
-];
-
 const resolvers = {
     Query: {
-        books: () => books,
+        pets: () => service.getPets(),
+        petsByType: (parent: any, args: PetsByTypeArgs) =>
+            service.getByType(args.type),
     },
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const mocks = {
+    Query: () => ({
+        // ...resolvers.Query,
+        pets: () => [
+            { name: 'Manual Mock', type: 'dog' },
+            { name: 'Manual 2', type: 'cat' },
+        ],
+    }),
+};
 
-// The `listen` method launches a web server.
+const service = new PetService();
+
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    mocks,
+});
+
 server.listen().then(({ url }) => {
     console.log(`🚀  Server ready at ${url}`);
 });
