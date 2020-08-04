@@ -7,10 +7,8 @@ const { schema, context, typeDefs, resolvers } = GraphqlModule;
 const app = new Koa();
 
 const server = new ApolloServer({
-    // schema,
+    schema,
     context,
-    typeDefs,
-    resolvers,
 });
 
 const mockServer = new ApolloServer({
