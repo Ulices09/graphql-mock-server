@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "apollo-server": "^2.16.1",
+    "apollo-server-koa": "^2.16.1",
     "graphql": "^14.5.8",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.4"
