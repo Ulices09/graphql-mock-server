@@ -1,0 +1,7 @@
+type Type {
+    name: String
+}
+
+type Query {
+    types: [Type]
+}

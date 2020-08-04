@@ -1,32 +1,14 @@
-import { ApolloServer, gql } from 'apollo-server-koa';
-import { PetService } from './services/pet.service';
+import { ApolloServer } from 'apollo-server-koa';
 import Koa from 'koa';
+import { GraphQLModule } from '@graphql-modules/core';
+import PetsModule from './modules/pets/graphql';
+import TypesModule from './modules/types/graphql';
 
-type PetsByTypeArgs = {
-    type: string;
-};
+const { schema, context, typeDefs, resolvers } = new GraphQLModule({
+    imports: [PetsModule, TypesModule],
+});
 
-const service = new PetService();
-
-const typeDefs = gql`
-    type Pet {
-        name: String
-        type: String
-    }
-
-    type Query {
-        pets: [Pet]
-        petsByType(type: String): [Pet]
-    }
-`;
-
-const resolvers = {
-    Query: {
-        pets: () => service.getPets(),
-        petsByType: (parent: any, args: PetsByTypeArgs) =>
-            service.getByType(args.type),
-    },
-};
+const app = new Koa();
 
 const mocks = {
     Query: () => ({
@@ -37,14 +19,16 @@ const mocks = {
     }),
 };
 
-const app = new Koa();
-
 const server = new ApolloServer({
+    // schema,
+    context,
     typeDefs,
     resolvers,
 });
 
 const mockServer = new ApolloServer({
+    // schema,
+    // context,
     typeDefs,
     resolvers,
     mocks,
@@ -60,6 +44,8 @@ mockServer.applyMiddleware({
     path: '/graphql-mock',
 });
 
-app.listen(4000, () => {
-    console.log(`🚀  Server ready`);
+const PORT = 4000;
+
+app.listen(PORT, () => {
+    console.log(`🚀  Server ready in port ${PORT}`);
 });
