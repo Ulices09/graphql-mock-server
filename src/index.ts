@@ -1,23 +1,10 @@
 import { ApolloServer } from 'apollo-server-koa';
 import Koa from 'koa';
-import { GraphQLModule } from '@graphql-modules/core';
-import PetsModule from './modules/pets/graphql';
-import TypesModule from './modules/types/graphql';
+import GraphqlModule, { mocks } from './graphql';
 
-const { schema, context, typeDefs, resolvers } = new GraphQLModule({
-    imports: [PetsModule, TypesModule],
-});
+const { schema, context, typeDefs, resolvers } = GraphqlModule;
 
 const app = new Koa();
-
-const mocks = {
-    Query: () => ({
-        pets: () => [
-            { name: 'Manual Mock', type: 'dog' },
-            { name: 'Manual 2', type: 'cat' },
-        ],
-    }),
-};
 
 const server = new ApolloServer({
     // schema,
@@ -28,7 +15,7 @@ const server = new ApolloServer({
 
 const mockServer = new ApolloServer({
     // schema,
-    // context,
+    context,
     typeDefs,
     resolvers,
     mocks,

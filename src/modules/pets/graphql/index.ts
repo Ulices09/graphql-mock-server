@@ -6,6 +6,9 @@ import { gql } from 'apollo-server-koa';
 import queries from './queries';
 import mutations from './mutations';
 
+import queriesMock from './mock/queries.mock';
+import mutationMock from './mock/mutations.mock';
+
 const graphql = fs.readFileSync(path.join(__dirname, 'schema.gql'), 'utf8');
 
 const PetsModule = new GraphQLModule({
@@ -17,5 +20,14 @@ const PetsModule = new GraphQLModule({
         Query: { ...queries },
     },
 });
+
+export const petsMock = {
+    Query: {
+        ...queriesMock,
+    },
+    Mutation: {
+        ...mutationMock,
+    },
+};
 
 export default PetsModule;
